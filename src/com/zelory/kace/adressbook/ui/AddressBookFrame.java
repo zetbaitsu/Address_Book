@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
-public class AddressBookFrame extends JFrame implements AddressBookPresenter.View {
+public class AddressBookFrame extends JFrame implements AddressBookPresenter.View, PersonDetailFrame.SaveListener {
 
     private JLabel status;
     private JProgressBar progressBar;
@@ -151,25 +151,28 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     private void addPerson() {
-        Person person = new Person();
-        person.setFirstName("Orang");
-        person.setLastName("tambahan");
-        person.setZip("237638123");
-        person.setState("US");
-        person.setCity("CA");
-        person.setAddress("asasa asa");
-        addressBook.getPersons().add(person);
-        showAddressBook(addressBook);
-        personList.ensureIndexIsVisible(personListModel.size() - 1);
+        PersonDetailFrame personDetailFrame = new PersonDetailFrame(null, this);
+        personDetailFrame.setLocationRelativeTo(this);
+        personDetailFrame.setVisible(true);
     }
 
     private void editPerson() {
-
+        if (personList.getSelectedValue() == null) {
+            showError("Please select person to edit!");
+        } else {
+            PersonDetailFrame personDetailFrame = new PersonDetailFrame(personList.getSelectedValue(), this);
+            personDetailFrame.setLocationRelativeTo(this);
+            personDetailFrame.setVisible(true);
+        }
     }
 
     private void deletePerson() {
-        addressBook.getPersons().remove(personList.getSelectedValue());
-        showAddressBook(addressBook);
+        if (personList.getSelectedValue() == null) {
+            showError("Please select person to delete!");
+        } else {
+            addressBook.getPersons().remove(personList.getSelectedValue());
+            showAddressBook(addressBook);
+        }
     }
 
     private void sortByName() {
@@ -189,6 +192,15 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     @Override
+    public void onPersonSaved(Person person) {
+        int result = addressBook.addOrUpdatePerson(person);
+        showAddressBook(addressBook);
+        if (result == AddressBook.PERSON_ADDED) {
+            personList.ensureIndexIsVisible(personListModel.size() - 1);
+        }
+    }
+
+    @Override
     public void showLoading() {
         status.setText("Loading...");
         progressBar.setVisible(true);
@@ -201,8 +213,7 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     @Override
-    public void onError(Throwable throwable) {
-        throwable.printStackTrace();
-        JOptionPane.showMessageDialog(this, throwable.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    public void showError(String errorMessage) {
+        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
