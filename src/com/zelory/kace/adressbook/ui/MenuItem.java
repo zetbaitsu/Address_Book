@@ -1,4 +1,4 @@
-package com.zelory.kace.adressbook.view;
+package com.zelory.kace.adressbook.ui;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
