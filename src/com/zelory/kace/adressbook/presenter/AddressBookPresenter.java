@@ -50,7 +50,7 @@ public class AddressBookPresenter {
         Observable.from(addressBook.getPersons())
                 .toSortedList((person1, person2) -> person1.getName().compareTo(person2.getName()))
                 .doOnNext(addressBook::setPersons)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .subscribe(savedAddressBook -> SwingUtilities.invokeLater(() -> {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
@@ -66,7 +66,7 @@ public class AddressBookPresenter {
         Observable.from(addressBook.getPersons())
                 .toSortedList((person1, person2) -> person1.getZip().compareTo(person2.getZip()))
                 .doOnNext(addressBook::setPersons)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .subscribe(savedAddressBook -> SwingUtilities.invokeLater(() -> {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
