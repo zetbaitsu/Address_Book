@@ -23,6 +23,10 @@ public class DataManager {
         return INSTANCE;
     }
 
+    private DataManager() {
+        
+    }
+
     public Observable<AddressBook> save(AddressBook addressBook, String path) {
         return Observable.create(subscriber -> {
             try {
