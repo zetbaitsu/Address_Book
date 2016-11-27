@@ -17,6 +17,10 @@ import java.util.List;
 @Getter
 @Setter
 public class AddressBook {
+
+    public static final int PERSON_ADDED = 1;
+    public static final int PERSON_UPDATED = 2;
+
     private String name;
     private List<Person> persons;
     private String path;
@@ -36,5 +40,16 @@ public class AddressBook {
     public AddressBook(String name, List<Person> persons) {
         this.name = name;
         this.persons = persons;
+    }
+
+    public int addOrUpdatePerson(Person person) {
+        int pos = persons.indexOf(person);
+        if (pos > 0) {
+            persons.set(pos, person);
+            return PERSON_UPDATED;
+        } else {
+            persons.add(person);
+            return PERSON_ADDED;
+        }
     }
 }
