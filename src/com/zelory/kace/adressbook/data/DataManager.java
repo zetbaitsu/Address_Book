@@ -24,7 +24,7 @@ public class DataManager {
     }
 
     private DataManager() {
-        
+
     }
 
     public Observable<AddressBook> save(AddressBook addressBook, String path) {
@@ -48,8 +48,7 @@ public class DataManager {
     public Observable<AddressBook> loadAddressBook(File file) {
         return Observable.create(subscriber -> {
             try {
-                AddressBook addressBook = new AddressBook(file);
-                subscriber.onNext(addressBook);
+                subscriber.onNext(new AddressBook(file));
             } catch (IOException e) {
                 subscriber.onError(e);
             } catch (JsonSyntaxException e) {
