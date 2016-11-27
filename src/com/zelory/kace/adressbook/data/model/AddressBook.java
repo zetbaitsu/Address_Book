@@ -44,7 +44,7 @@ public class AddressBook {
 
     public int addOrUpdatePerson(Person person) {
         int pos = persons.indexOf(person);
-        if (pos > 0) {
+        if (pos >= 0) {
             persons.set(pos, person);
             return PERSON_UPDATED;
         } else {
