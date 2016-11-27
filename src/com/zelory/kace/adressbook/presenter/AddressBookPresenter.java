@@ -24,7 +24,8 @@ public class AddressBookPresenter {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
-                    view.onError(throwable);
+                    throwable.printStackTrace();
+                    view.showError(throwable.getMessage());
                     view.dismissLoading();
                 }));
     }
@@ -38,7 +39,8 @@ public class AddressBookPresenter {
                     view.showAddressBook(savedAddressBook);
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
-                    view.onError(throwable);
+                    throwable.printStackTrace();
+                    view.showError(throwable.getMessage());
                     view.dismissLoading();
                 }));
     }
@@ -53,7 +55,8 @@ public class AddressBookPresenter {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
-                    view.onError(throwable);
+                    throwable.printStackTrace();
+                    view.showError(throwable.getMessage());
                     view.dismissLoading();
                 }));
     }
@@ -68,7 +71,8 @@ public class AddressBookPresenter {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
-                    view.onError(throwable);
+                    throwable.printStackTrace();
+                    view.showError(throwable.getMessage());
                     view.dismissLoading();
                 }));
     }
@@ -81,6 +85,6 @@ public class AddressBookPresenter {
 
         void dismissLoading();
 
-        void onError(Throwable throwable);
+        void showError(String errorMessage);
     }
 }
