@@ -3,8 +3,7 @@ package com.zelory.kace.adressbook;
 import com.zelory.kace.adressbook.data.model.AddressBook;
 import com.zelory.kace.adressbook.data.model.Person;
 import com.zelory.kace.adressbook.ui.AddressBookFrame;
-
-import java.util.Random;
+import com.zelory.kace.adressbook.util.RandomUtil;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,7 +15,7 @@ public class Main {
             person.setAddress("Suatu tempat");
             person.setCity("Suatu kota");
             person.setState("Suatu negara");
-            person.setZip(new Random().nextInt(9999) + "");
+            person.setZip(RandomUtil.getInstance().randomInt(1000, 9999) + "");
             addressBook.getPersons().add(person);
         }
         new AddressBookFrame(addressBook).setVisible(true);

@@ -3,11 +3,11 @@ package com.zelory.kace.adressbook.ui;
 import com.zelory.kace.adressbook.data.model.AddressBook;
 import com.zelory.kace.adressbook.data.model.Person;
 import com.zelory.kace.adressbook.presenter.AddressBookPresenter;
+import com.zelory.kace.adressbook.util.RandomUtil;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.util.Random;
 
 public class AddressBookFrame extends JFrame implements AddressBookPresenter.View {
 
@@ -92,11 +92,9 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     @Override
     public void setVisible(boolean visible) {
         if (visible) {
-            Random r = new Random();
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            Dimension d = tk.getScreenSize();
-            int x = r.nextInt(d.width - getWidth());
-            int y = r.nextInt(d.height - getHeight());
+            Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+            int x = RandomUtil.getInstance().randomInt(dimension.width - getWidth());
+            int y = RandomUtil.getInstance().randomInt(dimension.height - getHeight());
             setLocation(x, y);
         }
         super.setVisible(visible);
