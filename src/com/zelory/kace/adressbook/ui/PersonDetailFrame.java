@@ -1,0 +1,123 @@
+package com.zelory.kace.adressbook.ui;
+
+import com.zelory.kace.adressbook.data.model.Person;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class PersonDetailFrame extends JFrame {
+    private JTextField firsNameField;
+    private JTextField lastNameField;
+    private JTextField addressField;
+    private JTextField cityField;
+    private JTextField stateField;
+    private JTextField zipField;
+
+    private Person person;
+    private SaveListener saveListener;
+    private boolean create;
+
+    public PersonDetailFrame(Person person) {
+        this(person, null);
+    }
+
+    public PersonDetailFrame(Person person, SaveListener saveListener) {
+        super();
+        this.person = person;
+        this.saveListener = saveListener;
+        create = person == null;
+
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setSize(320, 240);
+        setResizable(false);
+
+        JPanel personDetailPanel = new JPanel();
+        GridLayout personDetailLayout = new GridLayout(6, 2);
+        personDetailLayout.setHgap(4);
+        personDetailLayout.setVgap(4);
+        personDetailPanel.setLayout(personDetailLayout);
+
+        firsNameField = new JTextField();
+        lastNameField = new JTextField();
+        addressField = new JTextField();
+        cityField = new JTextField();
+        stateField = new JTextField();
+        zipField = new JTextField();
+
+        personDetailPanel.add(new JLabel("First Name"));
+        personDetailPanel.add(firsNameField);
+        personDetailPanel.add(new JLabel("Last Name"));
+        personDetailPanel.add(lastNameField);
+        personDetailPanel.add(new JLabel("Address"));
+        personDetailPanel.add(addressField);
+        personDetailPanel.add(new JLabel("City"));
+        personDetailPanel.add(cityField);
+        personDetailPanel.add(new JLabel("State"));
+        personDetailPanel.add(stateField);
+        personDetailPanel.add(new JLabel("ZIP Code"));
+        personDetailPanel.add(zipField);
+
+        JPanel actionPanel = new JPanel();
+        GridLayout actionLayout = new GridLayout(1, 5);
+        actionLayout.setHgap(4);
+        actionLayout.setVgap(4);
+
+        actionPanel.setLayout(actionLayout);
+        actionPanel.add(new Button(create ? "Save" : "Update", e -> savePerson()));
+        actionPanel.add(new Button(create ? "Cancel" : "Close", e -> close()));
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        mainPanel.setLayout(new BorderLayout(4, 4));
+        mainPanel.add(personDetailPanel, BorderLayout.CENTER);
+        mainPanel.add(actionPanel, BorderLayout.SOUTH);
+
+        getContentPane().add(mainPanel);
+
+        if (!create) {
+            showPersonDetail();
+        } else {
+            setTitle("Add Person");
+        }
+    }
+
+    private void showPersonDetail() {
+        setTitle(person.getName());
+        firsNameField.setText(person.getFirstName());
+        lastNameField.setText(person.getLastName());
+        addressField.setText(person.getAddress());
+        cityField.setText(person.getCity());
+        stateField.setText(person.getState());
+        zipField.setText(person.getZip());
+
+        firsNameField.setEditable(false);
+        lastNameField.setEditable(false);
+    }
+
+    private void savePerson() {
+        if (create) {
+            person = new Person();
+        }
+        person.setFirstName(firsNameField.getText());
+        person.setLastName(lastNameField.getText());
+        person.setAddress(addressField.getText());
+        person.setCity(cityField.getText());
+        person.setState(stateField.getText());
+        person.setZip(zipField.getText());
+        if (saveListener != null) {
+            saveListener.onPersonSaved(person);
+        }
+        if (create) {
+            close();
+        }
+    }
+
+    private void close() {
+        setVisible(false);
+        dispose();
+    }
+
+    public interface SaveListener {
+        void onPersonSaved(Person person);
+    }
+}
