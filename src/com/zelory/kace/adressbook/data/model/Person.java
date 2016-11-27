@@ -13,8 +13,12 @@ public class Person {
     private String state;
     private String zip;
 
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+
     @Override
     public String toString() {
-        return firstName + " " + lastName;
+        return getName();
     }
 }
