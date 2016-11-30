@@ -26,7 +26,8 @@ public class AddressBook {
     private String path;
 
     public AddressBook() {
-        this("Untitled", new ArrayList<>());
+        name = "Untitled";
+        persons = new ArrayList<>();
     }
 
     public AddressBook(File file) throws IOException, JsonSyntaxException {
@@ -35,11 +36,6 @@ public class AddressBook {
         name = file.getName();
         persons = JsonParser.getInstance().getParser().fromJson(data.toString(), new TypeToken<List<Person>>() {}.getType());
         path = file.getAbsolutePath();
-    }
-
-    public AddressBook(String name, List<Person> persons) {
-        this.name = name;
-        this.persons = persons;
     }
 
     public int addOrUpdatePerson(Person person) {
