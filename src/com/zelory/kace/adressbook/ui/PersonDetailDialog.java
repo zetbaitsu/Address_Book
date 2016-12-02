@@ -101,6 +101,11 @@ public class PersonDetailDialog extends JDialog {
     }
 
     private void savePerson() {
+        if(validateInput()) {
+            JOptionPane.showMessageDialog(this, "Plase provide person name!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         if (create) {
             person = new Person();
         }
@@ -117,6 +122,13 @@ public class PersonDetailDialog extends JDialog {
         if (create) {
             close();
         }
+    }
+
+    private boolean validateInput() {
+        String firstName = firsNameField.getText().trim();
+        String lastName = lastNameField.getText().trim();
+
+        return firstName.equals("") || lastName.equals("");
     }
 
     private void close() {
