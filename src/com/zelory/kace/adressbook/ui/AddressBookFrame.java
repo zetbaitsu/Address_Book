@@ -130,7 +130,9 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         }
 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            presenter.loadAddressBook(fileChooser.getSelectedFile());
+            AddressBookFrame newFrame = new AddressBookFrame();
+            newFrame.presenter.loadAddressBook(fileChooser.getSelectedFile());
+            newFrame.setVisible(true);
         }
     }
 
