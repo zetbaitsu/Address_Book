@@ -1,14 +1,15 @@
 Simple Address Book Apps
 ======
-Address Book desktop apps based on Java 1.8. The class diagram of these apps
+Address Book desktop apps based on Java 1.8. Download latest release apps [here](https://github.com/zetbaitsu/Address_Book/releases).
+The class diagram of these apps
 
 <p align="center"><img src="https://raw.githubusercontent.com/zetbaitsu/Address_Book/master/diagram/Class%20Diagram%20Simple.png" width="100%" /></p>
 
 More detail class diagram:
 <p align="center"><img src="https://raw.githubusercontent.com/zetbaitsu/Address_Book/master/diagram/Class%20Diagram.png" width="100%" /></p>
 
-These project using maven as build automation, run those code to build the project:
 # Maven
+These project using maven as build automation, run those code to build the project:
 ```
 mvn package
 ```
