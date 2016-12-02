@@ -166,11 +166,17 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     private void deletePerson() {
-        if (personList.getSelectedValue() == null) {
+        Person person = personList.getSelectedValue();
+        if (person == null) {
             showError("Please select person to delete!");
         } else {
-            addressBook.removePerson(personList.getSelectedValue());
-            showAddressBook(addressBook);
+            int confirmed = JOptionPane.showConfirmDialog(this,
+                    "Are you sure want to delete " + person + "?", "Save", JOptionPane.YES_NO_OPTION);
+
+            if (confirmed == JOptionPane.YES_OPTION) {
+                addressBook.removePerson(person);
+                showAddressBook(addressBook);
+            }
         }
     }
 
