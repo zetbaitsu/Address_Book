@@ -2,6 +2,9 @@ package com.zelory.kace.adressbook.presenter;
 
 import com.zelory.kace.adressbook.data.DataManager;
 import com.zelory.kace.adressbook.data.model.AddressBook;
+import com.zelory.kace.adressbook.util.ReportUtil;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import net.sf.dynamicreports.report.exception.DRException;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -69,6 +72,27 @@ public class AddressBookPresenter {
                 .subscribeOn(Schedulers.computation())
                 .subscribe(savedAddressBook -> SwingUtilities.invokeLater(() -> {
                     view.showAddressBook(addressBook);
+                    view.dismissLoading();
+                }), throwable -> SwingUtilities.invokeLater(() -> {
+                    throwable.printStackTrace();
+                    view.showError(throwable.getMessage());
+                    view.dismissLoading();
+                }));
+    }
+
+    public void printAddressBook(AddressBook addressBook) {
+        view.showLoading();
+        Observable<JasperReportBuilder> reportObservable = Observable.create(subscriber -> {
+            try {
+                subscriber.onNext(ReportUtil.getInstance().createReport(addressBook).show(false));
+                subscriber.onCompleted();
+            } catch (DRException e) {
+                subscriber.onError(e);
+                subscriber.onCompleted();
+            }
+        });
+        reportObservable.subscribeOn(Schedulers.computation())
+                .subscribe(report -> SwingUtilities.invokeLater(() -> {
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
                     throwable.printStackTrace();

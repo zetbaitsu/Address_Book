@@ -143,7 +143,7 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     private void printAddressBook() {
-
+        presenter.printAddressBook(addressBook);
     }
 
     private void quitFromApps() {
