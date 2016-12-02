@@ -1,5 +1,6 @@
 package com.zelory.kace.adressbook.ui;
 
+import com.zelory.kace.adressbook.AddressBookApps;
 import com.zelory.kace.adressbook.data.model.AddressBook;
 import com.zelory.kace.adressbook.data.model.Person;
 import com.zelory.kace.adressbook.presenter.AddressBookPresenter;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class AddressBookFrame extends JFrame implements AddressBookPresenter.View, PersonDetailFrame.SaveListener {
+public class AddressBookFrame extends JFrame implements AddressBookPresenter.View, PersonDetailDialog.SaveListener {
 
     private JLabel status;
     private JProgressBar progressBar;
@@ -81,6 +82,8 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         getContentPane().add(mainPanel);
+
+        AddressBookApps.getInstance().incrementFrameCount();
     }
 
     private void createMenuBar() {
@@ -150,18 +153,18 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     private void addPerson() {
-        PersonDetailFrame personDetailFrame = new PersonDetailFrame(null, this);
-        personDetailFrame.setLocationRelativeTo(this);
-        personDetailFrame.setVisible(true);
+        PersonDetailDialog personDetailDialog = new PersonDetailDialog(this, null, this);
+        personDetailDialog.setLocationRelativeTo(this);
+        personDetailDialog.setVisible(true);
     }
 
     private void editPerson() {
         if (personList.getSelectedValue() == null) {
             showError("Please select person to edit!");
         } else {
-            PersonDetailFrame personDetailFrame = new PersonDetailFrame(personList.getSelectedValue(), this);
-            personDetailFrame.setLocationRelativeTo(this);
-            personDetailFrame.setVisible(true);
+            PersonDetailDialog personDetailDialog = new PersonDetailDialog(this, personList.getSelectedValue(), this);
+            personDetailDialog.setLocationRelativeTo(this);
+            personDetailDialog.setVisible(true);
         }
     }
 
@@ -233,6 +236,11 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         }
         setVisible(false);
         dispose();
+
+        AddressBookApps.getInstance().decrementFrameCount();
+        if (AddressBookApps.getInstance().getFrameCount() <= 0) {
+            quitFromApps();
+        }
     }
 
     private void quitFromApps() {
