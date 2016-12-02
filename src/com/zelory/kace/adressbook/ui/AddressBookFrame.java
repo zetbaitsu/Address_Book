@@ -11,6 +11,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.nio.file.WatchEvent;
 
 public class AddressBookFrame extends JFrame implements AddressBookPresenter.View, PersonDetailDialog.SaveListener {
 
@@ -121,6 +123,8 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     private void openAddressBook() {
+        checkIsAddressBookModified();
+
         if (fileChooser == null) {
             initFileChooser();
         }
@@ -200,6 +204,17 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     @Override
+    public void onAddressBookModified(WatchEvent<?> event) {
+        addressBook.setModified(true);
+        int confirmed = JOptionPane.showConfirmDialog(this,
+                "Address book file have been changed, reload it?", "Reload File", JOptionPane.YES_NO_OPTION);
+
+        if (confirmed == JOptionPane.YES_OPTION) {
+            presenter.loadAddressBook(fileChooser.getSelectedFile());
+        }
+    }
+
+    @Override
     public void onPersonSaved(Person person) {
         int result = addressBook.addOrUpdatePerson(person);
         showAddressBook(addressBook);
@@ -225,7 +240,20 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void closeAddressBook() {
+    private void checkIsAddressBookDeleted() {
+        if (addressBook.getPath() != null) {
+            if (!new File(addressBook.getPath()).exists()) {
+                int confirmed = JOptionPane.showConfirmDialog(this,
+                        "Address book have been deleted, save as new file?", "Save", JOptionPane.YES_NO_OPTION);
+
+                if (confirmed == JOptionPane.YES_OPTION) {
+                    saveAsAddressBook();
+                }
+            }
+        }
+    }
+
+    private void checkIsAddressBookModified() {
         if (addressBook.isModified()) {
             int confirmed = JOptionPane.showConfirmDialog(this,
                     "Do you want to save modified contact?", "Save", JOptionPane.YES_NO_OPTION);
@@ -234,8 +262,15 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
                 saveAddressBook();
             }
         }
+    }
+
+    private void closeAddressBook() {
+        checkIsAddressBookDeleted();
+        checkIsAddressBookModified();
         setVisible(false);
         dispose();
+
+        presenter.detachView();
 
         AddressBookApps.getInstance().decrementFrameCount();
         if (AddressBookApps.getInstance().getFrameCount() <= 0) {
