@@ -3,6 +3,10 @@ package com.zelory.kace.adressbook.ui;
 import com.zelory.kace.adressbook.data.model.Person;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 
 public class PersonDetailDialog extends JDialog {
@@ -46,6 +50,25 @@ public class PersonDetailDialog extends JDialog {
         stateField = new JTextField();
         zipField = new JTextField();
         phoneField = new JTextField();
+
+        PlainDocument integerOnly = new PlainDocument();
+        integerOnly.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int off, String str, AttributeSet attr)
+                    throws BadLocationException
+            {
+                fb.insertString(off, str.replaceAll("\\D++", ""), attr);  // remove non-digits
+            }
+            @Override
+            public void replace(FilterBypass fb, int off, int len, String str, AttributeSet attr)
+                    throws BadLocationException
+            {
+                fb.replace(off, len, str.replaceAll("\\D++", ""), attr);  // remove non-digits
+            }
+        });
+
+        phoneField.setDocument(integerOnly);
+
 
         personDetailPanel.add(new JLabel("First Name"));
         personDetailPanel.add(firsNameField);
