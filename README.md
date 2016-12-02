@@ -7,10 +7,10 @@ Address Book desktop apps based on Java 1.8. The class diagram of these apps
 More detail class diagram:
 <p align="center"><img src="https://raw.githubusercontent.com/zetbaitsu/Address_Book/master/diagram/Class%20Diagram.png" width="100%" /></p>
 
-These project using maven as build automation, run those code to run the project:
+These project using maven as build automation, run those code to build the project:
 # Maven
-```java
-mvn install
+```
+mvn package
 ```
 
 ## Dependencies
