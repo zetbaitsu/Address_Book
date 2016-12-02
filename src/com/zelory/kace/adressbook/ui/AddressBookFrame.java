@@ -178,7 +178,7 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
             showError("Please select person to delete!");
         } else {
             int confirmed = JOptionPane.showConfirmDialog(this,
-                    "Are you sure want to delete " + person + "?", "Save", JOptionPane.YES_NO_OPTION);
+                    "Are you sure want to delete " + person + "?", "Delete", JOptionPane.YES_NO_OPTION);
 
             if (confirmed == JOptionPane.YES_OPTION) {
                 addressBook.removePerson(person);
