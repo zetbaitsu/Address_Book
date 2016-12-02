@@ -52,10 +52,15 @@ public class AddressBookPresenter {
     public void sortPersonsByName(AddressBook addressBook) {
         view.showLoading();
         Observable.from(addressBook.getPersons())
-                .toSortedList((person1, person2) -> person1.getName().compareTo(person2.getName()))
+                .toSortedList((person1, person2) -> {
+                    if (person1.getLastName().equalsIgnoreCase(person2.getLastName())) {
+                        return person1.getFirstName().toLowerCase().compareTo(person2.getFirstName().toLowerCase());
+                    }
+                    return person1.getLastName().toLowerCase().compareTo(person2.getLastName().toLowerCase());
+                })
                 .doOnNext(addressBook::setPersons)
                 .subscribeOn(Schedulers.computation())
-                .subscribe(savedAddressBook -> SwingUtilities.invokeLater(() -> {
+                .subscribe(persons -> SwingUtilities.invokeLater(() -> {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
@@ -68,10 +73,18 @@ public class AddressBookPresenter {
     public void sortPersonsByZip(AddressBook addressBook) {
         view.showLoading();
         Observable.from(addressBook.getPersons())
-                .toSortedList((person1, person2) -> person1.getZip().compareTo(person2.getZip()))
+                .toSortedList((person1, person2) -> {
+                    if (person1.getZip().equalsIgnoreCase(person2.getZip())) {
+                        if (person1.getLastName().equalsIgnoreCase(person2.getLastName())) {
+                            return person1.getFirstName().toLowerCase().compareTo(person2.getFirstName().toLowerCase());
+                        }
+                        return person1.getLastName().toLowerCase().compareTo(person2.getLastName().toLowerCase());
+                    }
+                    return person1.getZip().toLowerCase().compareTo(person2.getZip().toLowerCase());
+                })
                 .doOnNext(addressBook::setPersons)
                 .subscribeOn(Schedulers.computation())
-                .subscribe(savedAddressBook -> SwingUtilities.invokeLater(() -> {
+                .subscribe(persons -> SwingUtilities.invokeLater(() -> {
                     view.showAddressBook(addressBook);
                     view.dismissLoading();
                 }), throwable -> SwingUtilities.invokeLater(() -> {
