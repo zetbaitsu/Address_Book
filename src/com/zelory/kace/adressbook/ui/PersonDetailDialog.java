@@ -3,11 +3,8 @@ package com.zelory.kace.adressbook.ui;
 import com.zelory.kace.adressbook.data.model.Person;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
-import javax.swing.text.PlainDocument;
 import java.awt.*;
+import java.util.regex.Pattern;
 
 public class PersonDetailDialog extends JDialog {
     private JTextField firsNameField;
@@ -50,25 +47,6 @@ public class PersonDetailDialog extends JDialog {
         stateField = new JTextField();
         zipField = new JTextField();
         phoneField = new JTextField();
-
-        PlainDocument integerOnly = new PlainDocument();
-        integerOnly.setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int off, String str, AttributeSet attr)
-                    throws BadLocationException
-            {
-                fb.insertString(off, str.replaceAll("\\D++", ""), attr);  // remove non-digits
-            }
-            @Override
-            public void replace(FilterBypass fb, int off, int len, String str, AttributeSet attr)
-                    throws BadLocationException
-            {
-                fb.replace(off, len, str.replaceAll("\\D++", ""), attr);  // remove non-digits
-            }
-        });
-
-        phoneField.setDocument(integerOnly);
-
 
         personDetailPanel.add(new JLabel("First Name"));
         personDetailPanel.add(firsNameField);
@@ -124,8 +102,7 @@ public class PersonDetailDialog extends JDialog {
     }
 
     private void savePerson() {
-        if (validateInput()) {
-            JOptionPane.showMessageDialog(this, "Please provide person name!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (!validateInput()) {
             return;
         }
 
@@ -139,6 +116,7 @@ public class PersonDetailDialog extends JDialog {
         person.setState(stateField.getText());
         person.setZip(zipField.getText());
         person.setPhoneNumber(phoneField.getText());
+
         if (saveListener != null) {
             saveListener.onPersonSaved(person);
         }
@@ -148,7 +126,40 @@ public class PersonDetailDialog extends JDialog {
     }
 
     private boolean validateInput() {
-        return firsNameField.getText().trim().isEmpty() || lastNameField.getText().trim().isEmpty();
+        if (firsNameField.getText().trim().isEmpty()) {
+            showError("Please insert person's first name!");
+            return false;
+        } else if (lastNameField.getText().trim().isEmpty()) {
+            showError("Please insert person's last name!");
+            return false;
+        } else if (addressField.getText().trim().isEmpty()) {
+            showError("Please insert person's address!");
+            return false;
+        } else if (cityField.getText().trim().isEmpty()) {
+            showError("Please insert person's city!");
+            return false;
+        } else if (stateField.getText().trim().isEmpty()) {
+            showError("Please insert person's state!");
+            return false;
+        } else if (zipField.getText().trim().isEmpty()) {
+            showError("Please insert person's ZIP code!");
+            return false;
+        } else if (!validatePhoneNumber(phoneField.getText())) {
+            showError("Please insert person's valid phone number!");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validatePhoneNumber(String phone) {
+        Pattern pattern = Pattern.compile("(\\+[0-9]+[\\- \\.]*)?"
+                + "(\\([0-9]+\\)[\\- \\.]*)?"
+                + "([0-9][0-9\\- \\.]+[0-9])");
+        return pattern.matcher(phone).matches();
+    }
+
+    public void showError(String errorMessage) {
+        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private void close() {
