@@ -24,6 +24,7 @@ public class AddressBook {
     private String name;
     private List<Person> persons;
     private String path;
+    private boolean modified;
 
     public AddressBook() {
         name = "Untitled";
@@ -39,6 +40,7 @@ public class AddressBook {
     }
 
     public int addOrUpdatePerson(Person person) {
+        modified = true;
         int pos = persons.indexOf(person);
         if (pos >= 0) {
             persons.set(pos, person);
@@ -47,5 +49,14 @@ public class AddressBook {
             persons.add(person);
             return PERSON_ADDED;
         }
+    }
+
+    public void removePerson(Person person) {
+        modified = persons.remove(person);
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+        modified = true;
     }
 }

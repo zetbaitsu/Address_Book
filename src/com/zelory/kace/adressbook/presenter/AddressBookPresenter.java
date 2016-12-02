@@ -37,6 +37,7 @@ public class AddressBookPresenter {
         view.showLoading();
         DataManager.getInstance()
                 .save(addressBook, path)
+                .doOnNext(saveAddressBook -> saveAddressBook.setModified(false))
                 .subscribeOn(Schedulers.io())
                 .subscribe(savedAddressBook -> SwingUtilities.invokeLater(() -> {
                     view.showAddressBook(savedAddressBook);

@@ -8,6 +8,8 @@ import com.zelory.kace.adressbook.util.RandomUtil;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class AddressBookFrame extends JFrame implements AddressBookPresenter.View, PersonDetailFrame.SaveListener {
 
@@ -30,7 +32,13 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         presenter = new AddressBookPresenter(this);
 
         createMenuBar();
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeAddressBook();
+            }
+        });
         setTitle(addressBook.getName());
         setSize(600, 480);
 
@@ -119,11 +127,6 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         }
     }
 
-    private void closeAddressBook() {
-        setVisible(false);
-        dispose();
-    }
-
     private void saveAddressBook() {
         if (addressBook.getPath() == null || addressBook.getPath().isEmpty()) {
             saveAsAddressBook();
@@ -146,10 +149,6 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         presenter.printAddressBook(addressBook);
     }
 
-    private void quitFromApps() {
-        System.exit(0);
-    }
-
     private void addPerson() {
         PersonDetailFrame personDetailFrame = new PersonDetailFrame(null, this);
         personDetailFrame.setLocationRelativeTo(this);
@@ -170,7 +169,7 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
         if (personList.getSelectedValue() == null) {
             showError("Please select person to delete!");
         } else {
-            addressBook.getPersons().remove(personList.getSelectedValue());
+            addressBook.removePerson(personList.getSelectedValue());
             showAddressBook(addressBook);
         }
     }
@@ -215,5 +214,22 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     @Override
     public void showError(String errorMessage) {
         JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void closeAddressBook() {
+        if (addressBook.isModified()) {
+            int confirmed = JOptionPane.showConfirmDialog(this,
+                    "Do you want to save modified contact?", "Save", JOptionPane.YES_NO_OPTION);
+
+            if (confirmed == JOptionPane.YES_OPTION) {
+                saveAddressBook();
+            }
+        }
+        setVisible(false);
+        dispose();
+    }
+
+    private void quitFromApps() {
+        System.exit(0);
     }
 }
