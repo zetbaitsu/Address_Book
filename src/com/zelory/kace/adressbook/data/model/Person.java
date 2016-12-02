@@ -12,6 +12,7 @@ public class Person {
     private String city;
     private String state;
     private String zip;
+    private String phoneNumber;
 
     public String getName() {
         return firstName + " " + lastName;

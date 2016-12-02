@@ -12,6 +12,7 @@ public class PersonDetailFrame extends JFrame {
     private JTextField cityField;
     private JTextField stateField;
     private JTextField zipField;
+    private JTextField phoneField;
 
     private Person person;
     private SaveListener saveListener;
@@ -32,7 +33,7 @@ public class PersonDetailFrame extends JFrame {
         setResizable(false);
 
         JPanel personDetailPanel = new JPanel();
-        GridLayout personDetailLayout = new GridLayout(6, 2);
+        GridLayout personDetailLayout = new GridLayout(7, 2);
         personDetailLayout.setHgap(4);
         personDetailLayout.setVgap(4);
         personDetailPanel.setLayout(personDetailLayout);
@@ -43,6 +44,7 @@ public class PersonDetailFrame extends JFrame {
         cityField = new JTextField();
         stateField = new JTextField();
         zipField = new JTextField();
+        phoneField = new JTextField();
 
         personDetailPanel.add(new JLabel("First Name"));
         personDetailPanel.add(firsNameField);
@@ -56,9 +58,11 @@ public class PersonDetailFrame extends JFrame {
         personDetailPanel.add(stateField);
         personDetailPanel.add(new JLabel("ZIP Code"));
         personDetailPanel.add(zipField);
+        personDetailPanel.add(new JLabel("Phone Number"));
+        personDetailPanel.add(phoneField);
 
         JPanel actionPanel = new JPanel();
-        GridLayout actionLayout = new GridLayout(1, 5);
+        GridLayout actionLayout = new GridLayout(1, 2);
         actionLayout.setHgap(4);
         actionLayout.setVgap(4);
 
@@ -89,6 +93,7 @@ public class PersonDetailFrame extends JFrame {
         cityField.setText(person.getCity());
         stateField.setText(person.getState());
         zipField.setText(person.getZip());
+        phoneField.setText(person.getPhoneNumber());
 
         firsNameField.setEditable(false);
         lastNameField.setEditable(false);
@@ -104,6 +109,7 @@ public class PersonDetailFrame extends JFrame {
         person.setCity(cityField.getText());
         person.setState(stateField.getText());
         person.setZip(zipField.getText());
+        person.setPhoneNumber(phoneField.getText());
         if (saveListener != null) {
             saveListener.onPersonSaved(person);
         }
