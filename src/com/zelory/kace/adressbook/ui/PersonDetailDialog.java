@@ -5,7 +5,7 @@ import com.zelory.kace.adressbook.data.model.Person;
 import javax.swing.*;
 import java.awt.*;
 
-public class PersonDetailFrame extends JFrame {
+public class PersonDetailDialog extends JDialog {
     private JTextField firsNameField;
     private JTextField lastNameField;
     private JTextField addressField;
@@ -18,12 +18,12 @@ public class PersonDetailFrame extends JFrame {
     private SaveListener saveListener;
     private boolean create;
 
-    public PersonDetailFrame(Person person) {
-        this(person, null);
+    public PersonDetailDialog(JFrame parent, Person person) {
+        this(parent, person, null);
     }
 
-    public PersonDetailFrame(Person person, SaveListener saveListener) {
-        super();
+    public PersonDetailDialog(JFrame parent, Person person, SaveListener saveListener) {
+        super(parent);
         this.person = person;
         this.saveListener = saveListener;
         create = person == null;
@@ -31,6 +31,7 @@ public class PersonDetailFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(320, 240);
         setResizable(false);
+        setModalityType(ModalityType.DOCUMENT_MODAL);
 
         JPanel personDetailPanel = new JPanel();
         GridLayout personDetailLayout = new GridLayout(7, 2);
