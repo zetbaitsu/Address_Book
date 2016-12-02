@@ -123,8 +123,6 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
     }
 
     private void openAddressBook() {
-        checkIsAddressBookModified();
-
         if (fileChooser == null) {
             initFileChooser();
         }
