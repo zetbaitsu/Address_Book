@@ -210,7 +210,7 @@ public class AddressBookFrame extends JFrame implements AddressBookPresenter.Vie
                 "Address book file have been changed, reload it?", "Reload File", JOptionPane.YES_NO_OPTION);
 
         if (confirmed == JOptionPane.YES_OPTION) {
-            presenter.loadAddressBook(fileChooser.getSelectedFile());
+            presenter.loadAddressBook(new File(addressBook.getPath()));
         }
     }
 
